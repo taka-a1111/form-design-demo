@@ -196,10 +196,10 @@
       opacity: 1;
     }
 
-    .bottom-note {
-      margin: 0 0 12px;
-      font-size: 12px;
-      line-height: 1.75;
+        .bottom-note {
+      margin: 0 0 10px;
+      font-size: 10px;
+      line-height: 1.35;
       color: #111;
     }
 
@@ -299,7 +299,7 @@
       font-size: 16px;
     }
 
-    .quantity-row {
+        .quantity-row {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -334,6 +334,95 @@
     .cart-button .icon {
       font-size: 18px;
     }
+
+    /* 添付画像のカートボタンを反映 */
+    .bottom-note {
+      margin: 0 0 10px;
+      font-size: 10px;
+      line-height: 1.35;
+      color: #111;
+    }
+
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 10px;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    /* 文章・個数欄・カートボタンの間隔を統一 */
+    .order-panel .bottom-note {
+      margin: 0 0 10px !important;
+    }
+
+    .order-panel .quantity-row {
+      margin: 0 0 10px !important;
+    }
+
+    /* 白枠なし・黒ボタン実寸調整 */
+    .order-panel .cart-button.custom-cart-button {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 12px !important;
+      width: 100% !important;
+      height: 58px !important;
+      min-height: 58px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 6px !important;
+      background: linear-gradient(90deg, #232323 0%, #2c2c2c 50%, #232323 100%) !important;
+      color: #fff !important;
+      box-shadow: none !important;
+      line-height: 1 !important;
+      cursor: pointer !important;
+      overflow: hidden !important;
+    }
+
+    .order-panel .cart-button.custom-cart-button::before,
+    .order-panel .cart-button.custom-cart-button::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .order-panel .cart-button.custom-cart-button .cart-icon {
+      width: 34px !important;
+      height: 34px !important;
+      flex: 0 0 34px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 0 !important;
+      background: transparent !important;
+    }
+
+    .order-panel .cart-button.custom-cart-button .cart-icon svg {
+      width: 34px !important;
+      height: 34px !important;
+      display: block !important;
+    }
+
+    .order-panel .cart-button.custom-cart-button .cart-button-label {
+      color: #fff !important;
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      letter-spacing: .04em !important;
+      line-height: 1 !important;
+      white-space: nowrap !important;
+      background: transparent !important;
+    }
+
+
+    /* カートボタンサイズのみ調整 */
+    .order-panel .cart-button.custom-cart-button {
+      width: 100% !important;
+      height: 56px !important;
+      min-height: 56px !important;
+    }
+
 </style>
 </head>
 <body>
@@ -418,15 +507,26 @@
         </div>
 
         <p class="bottom-note">「宗教別名前入り挨拶状」を選択された方・「手提げ袋」<br>などのご要望は<a href="#">カート内の通信欄</a>にご記入下さい。</p>
-
-
         <div class="quantity-row">
           <label class="quantity-label" for="quantity">個数：</label>
           <input id="quantity" name="quantity" type="number" min="1" value="1" inputmode="numeric">
           <span>個</span>
         </div>
 
-        <button class="cart-button" type="submit"><span class="icon" aria-hidden="true">🛒</span>カートに入れる</button>
+        
+        <button class="cart-button custom-cart-button" type="submit" aria-label="カートに入れる">
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+              <g fill="#ffffff">
+                <circle cx="24" cy="54" r="4.2"/>
+                <circle cx="45" cy="54" r="4.2"/>
+                <path d="M8 10h8.5c1.6 0 3 1 3.5 2.5l1.3 4.2h31.5c2.6 0 4.5 2.5 3.8 5l-4.6 15.6c-.5 1.8-2.2 3-4 3H24.8c-1.9 0-3.5-1.2-4-3L13.7 14H8c-1.7 0-3-1.3-3-3s1.3-3 3-3z"/>
+              </g>
+            </svg>
+          </span>
+          <span class="cart-button-label">カートに入れる</span>
+        </button>
+
       </form>
     </div>
   </section>

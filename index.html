@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>注文フォーム＋価格表示リデザイン</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Sans", "ヒラギノ角ゴ ProN", "Yu Gothic", "Meiryo", sans-serif;
+    background: #f5f1e8;
+    padding: 40px 20px;
+    margin: 0;
+    color: #333;
+  }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .page-title {
+    text-align: center;
+    color: #3d3d3d;
+    font-weight: normal;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .page-sub {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+  }
+  @media (max-width: 1100px) {
+    .comparison { grid-template-columns: 1fr; }
+  }
+  .col {
+    background: #fff;
+    padding: 24px;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .col h2 {
+    font-size: 15px;
+    font-weight: normal;
+    color: #666;
+    text-align: center;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8e0c8;
+  }
+  .col h2 .badge {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #999;
+    color: #666;
+    font-size: 11px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    border-radius: 2px;
+  }
+  .col h2 .badge-new {
+    background: #6b4423;
+    color: #fff;
+    border-color: #6b4423;
+  }
+
+  /* ==================================================
+     BEFORE: 現状の再現
+     ================================================== */
+  .before-product {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  }
+  .before-product h1 {
+    font-size: 16px;
+    margin: 0 0 14px 0;
+    line-height: 1.4;
+  }
+  .before-product table.price {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .before-product table.price th {
+    text-align: left;
+    font-weight: normal;
+    color: #555;
+    width: 40%;
+    padding: 4px 0;
+    vertical-align: top;
+  }
+  .before-product table.price td {
+    padding: 4px 0;
+  }
+  .before-product .strike { text-decoration: line-through; color: #888; }
+  .before-product .selling_price { color: #c00; font-size: 18px; font-weight: bold; }
+  .before-product .discount_rate { color: #c00; font-size: 12px; margin-left: 4px; }
+  .before-product .publish_point { font-size: 12px; color: #777; }
+
+  .before-product table.spec {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .before-product table.spec th,
+  .before-product table.spec td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    vertical-align: top;
+  }
+  .before-product table.spec th {
+    background: #f5f5f5;
+    font-weight: normal;
+    width: 40%;
+    color: #444;
+  }
+  .before-product table.spec select,
+  .before-product table.spec input[type="text"] {
+    width: 100%;
+    padding: 3px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+  }
+  .before-product .option_comment {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .before-cart-btn {
+    background: #555;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+
+  /* ==================================================
+     AFTER: 新デザイン（実装イメージ）
+     ================================================== */
+  .after-product {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Yu Gothic", serif;
+  }
+
+  /* 商品名 */
+  .after-product h1 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #2c2418;
+    margin: 0 0 18px 0;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  /* 価格表示エリア */
+  .after-product .price-block {
+    background: linear-gradient(180deg, #faf6ec 0%, #f5efde 100%);
+    padding: 18px 20px;
+    border-radius: 6px;
+    margin-bottom: 22px;
+    border: 1px solid #e0d4b3;
+  }
+  .after-product .fixed-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #8a7556;
+    margin-bottom: 6px;
+  }
+  .after-product .fixed-row .label { color: #8a7556; }
+  .after-product .fixed-row .strike {
+    text-decoration: line-through;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+  }
+  .after-product .price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .after-product .price-row .label {
+    font-size: 14px;
+    color: #4a3a25;
+    font-weight: 600;
+  }
+  .after-product .price-row .price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .after-product .selling-price {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: #8b1a1a;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .after-product .taxin {
+    font-size: 12px;
+    color: #6b5a40;
+  }
+  .after-product .off-badge {
+    display: inline-block;
+    background: #8b1a1a;
+    color: #fff;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+  .after-product .point-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dotted #c9b58e;
+    font-size: 12px;
+    color: #6b5a40;
+    text-align: right;
+  }
+  .after-product .point-row::before {
+    content: "🎁 ";
+    margin-right: 2px;
+  }
+
+  /* フォームエリア */
+  .after-product .form-block {
+    border: 1px solid #e0d4b3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .after-product .form-header {
+    background: #6b4423;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .after-product .form-header::before {
+    content: "📋 ";
+    margin-right: 4px;
+  }
+  .after-product .form-row {
+    padding: 14px 16px;
+    border-bottom: 1px dotted #e0d4b3;
+  }
+  .after-product .form-row:last-of-type {
+    border-bottom: none;
+  }
+  .after-product .form-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .after-product .form-label .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #6b4423;
+    color: #fff;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .after-product .form-label .label-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2418;
+  }
+  .after-product .form-label .req {
+    display: inline-block;
+    background: #b94a4a;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 8px;
+    border-radius: 2px;
+    font-family: "Hiragino Sans", sans-serif;
+  }
+  .after-product .form-label .opt {
+    display: inline-block;
+    background: #aaa;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 8px;
+    border-radius: 2px;
+    font-family: "Hiragino Sans", sans-serif;
+  }
+  .after-product .helper-text {
+    margin-left: 32px;
+    margin-bottom: 8px;
+    background: #faf6ec;
+    border-left: 3px solid #c9b58e;
+    padding: 8px 12px;
+    border-radius: 0 3px 3px 0;
+    font-size: 12px;
+    color: #6b5a40;
+    line-height: 1.6;
+  }
+  .after-product .helper-text strong {
+    color: #6b4423;
+    font-weight: 600;
+  }
+  .after-product .form-input-wrap {
+    margin-left: 32px;
+  }
+  .after-product .form-input-wrap select,
+  .after-product .form-input-wrap input[type="text"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #d0c8b5;
+    border-radius: 3px;
+    font-size: 13px;
+    background: #fff;
+    color: #333;
+    font-family: inherit;
+  }
+  .after-product .form-input-wrap select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath fill='%236b4423' d='M6 8L0 0h12z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px;
+  }
+  .after-product .qty-row {
+    background: #faf6ec;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .after-product .qty-row .qty-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2418;
+  }
+  .after-product .qty-row .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .after-product .qty-row input[type="text"] {
+    width: 50px;
+    padding: 7px;
+    text-align: center;
+    border: 1px solid #d0c8b5;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  .after-product .qty-row .unit {
+    font-size: 13px;
+    color: #666;
+  }
+  .after-product .stock-info {
+    text-align: right;
+    font-size: 12px;
+    color: #2a7a3a;
+    margin-top: 10px;
+  }
+  .after-product .stock-info::before {
+    content: "● ";
+  }
+  .after-product .cart-btn {
+    width: 100%;
+    background: linear-gradient(180deg, #2c2418 0%, #1a1410 100%);
+    color: #fff;
+    padding: 18px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    margin-top: 14px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    font-family: "Hiragino Sans", sans-serif;
+  }
+  .after-product .cart-btn::before {
+    content: "🛒 ";
+  }
+
+  /* 改修ポイント説明 */
+  .notes {
+    background: #fff;
+    padding: 28px;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-top: 30px;
+  }
+  .notes h3 {
+    font-size: 16px;
+    color: #2c2418;
+    margin: 0 0 16px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0d4b3;
+  }
+  .notes ul {
+    margin: 0;
+    padding-left: 22px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #555;
+  }
+  .notes ul li strong {
+    color: #6b4423;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1 class="page-title">注文フォーム＋価格表示 リデザイン案</h1>
+  <p class="page-sub">現状サイトの構造をそのままに、CSSとJavaScriptで見た目と使いやすさを刷新</p>
+
+  <div class="comparison">
+
+    <!-- BEFORE -->
+    <div class="col">
+      <h2><span class="badge">現状</span>Before</h2>
+      <div class="before-product">
+        <h1>【送料無料】ドトールコーヒー＆スイーツセレクション L1116-100</h1>
+        <table class="price">
+          <tr>
+            <th>定価:</th>
+            <td><span class="strike">¥3,240(税込)</span></td>
+          </tr>
+          <tr>
+            <th>価格:</th>
+            <td><span class="selling_price">¥2,916</span> <span style="font-size:11px;">(税込)</span> <span class="discount_rate">10%OFF</span></td>
+          </tr>
+          <tr>
+            <td colspan="2"><span class="publish_point">[ポイント還元 29ポイント〜]</span></td>
+          </tr>
+        </table>
+        <table class="spec">
+          <tr>
+            <th>１．のし紙を選択:</th>
+            <td><select><option>選択してください</option><option>蓮なし（黒白水引・宗教問わず使用可）</option></select></td>
+          </tr>
+          <tr>
+            <th>２．のし上:</th>
+            <td><select><option>選択してください</option><option>志（宗教問わず使用可）</option></select></td>
+          </tr>
+          <tr>
+            <th>３．のし下:</th>
+            <td>
+              <div class="option_comment">喪家の姓（例：山田）、不要な場合は「なし」とご記入ください</div>
+              <input type="text">
+            </td>
+          </tr>
+          <tr>
+            <th>４．包装紙を選択:</th>
+            <td><select><option>選択してください</option><option>菊小紋（当店推奨品）</option></select></td>
+          </tr>
+          <tr>
+            <th>５．挨拶状を選択:</th>
+            <td>
+              <div class="option_comment">宗教別名前入り挨拶状を選択された場合はカート内の通信欄に必要事項をご記入ください</div>
+              <select><option>選択してください</option><option>挨拶状不要</option></select>
+            </td>
+          </tr>
+          <tr>
+            <th>６．備考・ご要望:</th>
+            <td>
+              <div class="option_comment">（例：外のし希望など）手提げ袋やその他のご要望はカート内の通信欄にご記入ください</div>
+              <input type="text">
+            </td>
+          </tr>
+          <tr>
+            <th>数量:</th>
+            <td><input type="text" value="1" style="width:40px;"> 個</td>
+          </tr>
+          <tr>
+            <th>在庫:</th>
+            <td>在庫あり</td>
+          </tr>
+        </table>
+        <div class="before-cart-btn">🛒 カートに入れる</div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="col">
+      <h2><span class="badge badge-new">改修後</span>After</h2>
+      <div class="after-product">
+
+        <h1>【送料無料】ドトールコーヒー＆スイーツセレクション L1116-100</h1>
+
+        <!-- 価格ブロック -->
+        <div class="price-block">
+          <div class="fixed-row">
+            <span class="label">定価</span>
+            <span class="strike">¥3,240 (税込)</span>
+          </div>
+          <div class="price-row">
+            <span class="label">販売価格</span>
+            <div class="price-main">
+              <span class="selling-price">¥2,916</span>
+              <span class="taxin">(税込)</span>
+              <span class="off-badge">10%OFF</span>
+            </div>
+          </div>
+          <div class="point-row">ポイント還元 29ポイント〜</div>
+        </div>
+
+        <!-- フォームブロック -->
+        <div class="form-block">
+          <div class="form-header">ご注文オプションをお選びください</div>
+
+          <!-- のし紙 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">1</span>
+              <span class="label-text">のし紙</span>
+              <span class="req">必須</span>
+            </div>
+            <div class="helper-text">
+              ※迷った方は、<strong>蓮なし（黒白水引）</strong>をお選び下さい。<br>
+              （宗教・用途問わず使用可）
+            </div>
+            <div class="form-input-wrap">
+              <select>
+                <option>選択してください</option>
+                <option>蓮なし（黒白水引・宗教問わず使用可）</option>
+                <option>蓮入り（藍銀水引・仏教全般で使用）</option>
+                <option>黄白（黄銀水引・神道、キリスト教、関西地方等で使用）</option>
+                <option>デザイン掛け紙</option>
+                <option>その他（慶事用など）備考欄でご指示ください</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- のし上 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">2</span>
+              <span class="label-text">のし上</span>
+              <span class="req">必須</span>
+            </div>
+            <div class="helper-text">
+              ※迷った方は、<strong>「志」</strong>をお選び下さい。<br>
+              （宗教・用途問わず使用可）
+            </div>
+            <div class="form-input-wrap">
+              <select>
+                <option>選択してください</option>
+                <option>志（宗教問わず使用可）</option>
+                <option>満中陰志</option>
+                <option>粗供養</option>
+                <option>忌明志</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- のし下 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">3</span>
+              <span class="label-text">のし下</span>
+              <span class="opt">任意</span>
+            </div>
+            <div class="helper-text">
+              <strong>喪主の姓（例：山田）</strong><br>
+              ※必要な場合のみ、ご記入下さい。
+            </div>
+            <div class="form-input-wrap">
+              <input type="text" placeholder="例：山田">
+            </div>
+          </div>
+
+          <!-- 包装紙 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">4</span>
+              <span class="label-text">包装紙</span>
+              <span class="req">必須</span>
+            </div>
+            <div class="helper-text">
+              ※迷った方は、<strong>菊小紋</strong>をお選び下さい。
+            </div>
+            <div class="form-input-wrap">
+              <select>
+                <option>選択してください</option>
+                <option>菊小紋（当店推奨品）</option>
+                <option>和紙調</option>
+                <option>菊凪</option>
+                <option>華小紋</option>
+                <option>かすみ桜</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 挨拶状 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">5</span>
+              <span class="label-text">挨拶状</span>
+              <span class="req">必須</span>
+            </div>
+            <div class="helper-text">
+              ※迷った方は、<strong>香典返し用定型文</strong>をお選び下さい。<br>
+              （宗教・用途問わず使用可）
+            </div>
+            <div class="form-input-wrap">
+              <select>
+                <option>選択してください</option>
+                <option>挨拶状不要</option>
+                <option>香典返し用定型文（小）宗教を問わず利用可</option>
+                <option>香典返し用定型文（大）宗教を問わず利用可</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 備考 -->
+          <div class="form-row">
+            <div class="form-label">
+              <span class="step-num">6</span>
+              <span class="label-text">備考・ご要望</span>
+              <span class="opt">任意</span>
+            </div>
+            <div class="helper-text">
+              「<strong>宗教別名前入り挨拶状</strong>」を選択された方・<strong>手提げ袋</strong>などのご要望はカート内の通信欄にご記入下さい。
+            </div>
+            <div class="form-input-wrap">
+              <input type="text" placeholder="例：外のし希望など">
+            </div>
+          </div>
+
+          <!-- 数量 -->
+          <div class="qty-row">
+            <span class="qty-label">数量</span>
+            <div class="qty-control">
+              <input type="text" value="1">
+              <span class="unit">個</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stock-info">在庫あり</div>
+
+        <button class="cart-btn">カートに入れる</button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 改修ポイント -->
+  <div class="notes">
+    <h3>主な改修ポイント</h3>
+    <ul>
+      <li><strong>価格表示を独立したブロック化</strong> — ベージュ地の枠で囲み、販売価格を大きく赤色強調、OFFバッジで割引率を視認しやすく</li>
+      <li><strong>注文フォームをセクション化</strong> — 「ご注文オプションをお選びください」ヘッダーで誘導、6つのステップを丸番号で順番に</li>
+      <li><strong>「必須」「任意」のバッジ表示</strong> — のし下と備考は任意項目として明示し、ユーザーの心理的負担を軽減</li>
+      <li><strong>受領した「迷った方は〇〇」を補助テキスト化</strong> — 各項目に左ラインの装飾枠で配置、迷いを減らす親切設計</li>
+      <li><strong>セレクトボックスをカスタムデザイン</strong> — テーマカラー（茶系）の矢印で統一感、視認性向上</li>
+      <li><strong>数量欄を独立した強調枠</strong> — 注文の最終ステップとして目立たせ、押し間違いを防止</li>
+      <li><strong>カートボタンを大型化＆グラデーション</strong> — コンバージョン直結要素を視覚的に強調</li>
+      <li><strong>香典返しに合う品位ある配色</strong> — ベージュ・墨色・小豆色を基調にし、派手さを抑えた落ち着いた印象</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -298,6 +298,42 @@
     .cart-button .icon {
       font-size: 16px;
     }
+
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 10px;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .quantity-label {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .quantity-row input[type="number"] {
+      width: 54px;
+      height: 28px;
+      padding: 0 6px;
+      border: 1px solid #9ca4b0;
+      border-radius: 4px;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 11px;
+      line-height: 28px;
+    }
+
+    .cart-button {
+      height: 50px;
+      font-size: 15px;
+    }
+
+    .cart-button .icon {
+      font-size: 18px;
+    }
 </style>
 </head>
 <body>
@@ -329,7 +365,7 @@
       <form class="order-panel" action="#" method="post">
         <div class="form-group">
           <p class="group-title">のし紙：</p>
-          <p class="group-note">※分からない方は、蓮なし（黒白水引）をお選び下さい。</p>
+          <p class="group-note">※分からない方は、「蓮なし（黒白水引）」をお選び下さい。</p>
           <select name="noshi_paper" aria-label="のし紙">
             <option value="">選択してください</option>
             <option>蓮なし（黒白水引）</option>
@@ -360,7 +396,7 @@
 
         <div class="form-group">
           <p class="group-title">包装紙：</p>
-          <p class="group-note">※分からない方は、菊小紋をお選び下さい。</p>
+          <p class="group-note">※分からない方は、「菊小紋」をお選び下さい。</p>
           <select name="wrapping_paper" aria-label="包装紙">
             <option value="">選択してください</option>
             <option>菊小紋</option>
@@ -372,7 +408,7 @@
 
         <div class="form-group">
           <p class="group-title">挨拶状：</p>
-          <p class="group-note">※分からない方は、香典返し用定型分をお選び下さい。</p>
+          <p class="group-note">※分からない方は、「香典返し用定型分」をお選び下さい。</p>
           <select name="greeting_card" aria-label="挨拶状">
             <option value="">選択してください</option>
             <option>香典返し用定型分</option>
@@ -381,7 +417,14 @@
           </select>
         </div>
 
-        <p class="bottom-note">「宗教別名前入り挨拶状」を選択された方・<br>手提げ袋などのご要望は<a href="#">カート内の通信欄</a>にご記入下さい。</p>
+        <p class="bottom-note">「宗教別名前入り挨拶状」を選択された方・「手提げ袋」<br>などのご要望は<a href="#">カート内の通信欄</a>にご記入下さい。</p>
+
+
+        <div class="quantity-row">
+          <label class="quantity-label" for="quantity">個数：</label>
+          <input id="quantity" name="quantity" type="number" min="1" value="1" inputmode="numeric">
+          <span>個</span>
+        </div>
 
         <button class="cart-button" type="submit"><span class="icon" aria-hidden="true">🛒</span>カートに入れる</button>
       </form>
